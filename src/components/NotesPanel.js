@@ -6,7 +6,7 @@ import Button from "@material-ui/core/Button";
 import Tooltip from "@material-ui/core/Tooltip";
 import NoteNameDialog from "./NoteNameDialog";
 import { convertToRaw } from "draft-js";
-import Divider from '@material-ui/core/Divider';
+import Divider from "@material-ui/core/Divider";
 
 export default function NotesPanel(props) {
   const initialValue = [
@@ -29,7 +29,6 @@ export default function NotesPanel(props) {
     setOpen(true);
   };
 
-
   const handleNewNote = (newNoteTitle) => {
     let formData = new URLSearchParams();
 
@@ -49,7 +48,7 @@ export default function NotesPanel(props) {
         console.log(result);
         existingNotes.unshift(result);
         setNotes(existingNotes);
-        setSelectedNote(existingNotes[0]._id)
+        setSelectedNote(existingNotes[0]._id);
         setLoaded(true);
       });
   };
@@ -60,7 +59,10 @@ export default function NotesPanel(props) {
 
   React.useEffect(() => {
     fetch("http://localhost:8080/notes")
-      .then((res) => res.json())
+      .then((res) => {
+        console.log(res)
+        return res.json();
+      })
       .then((result) => {
         console.log(result);
 
@@ -68,7 +70,6 @@ export default function NotesPanel(props) {
           console.log("EMPTY");
           setLoaded(false);
           handleNewNote("First note");
-          
         } else {
           setNotes(result);
           setSelectedNote(result[0]._id);
@@ -77,14 +78,13 @@ export default function NotesPanel(props) {
       })
       .then(() => {
         console.log(selectedNote);
-        setLoaded(true)
+        setLoaded(true);
       });
   }, []);
 
-
   React.useEffect(() => {
     console.log("CHANFED");
-  }, [selectedNote])
+  }, [selectedNote]);
 
   function handleClick(id) {
     if (id !== selectedNote) {
@@ -107,10 +107,9 @@ export default function NotesPanel(props) {
         existingNotes = existingNotes.filter(function (obj) {
           return obj._id !== id;
         });
-        
+
         setSelectedNote(existingNotes[0]._id);
         setNotes(existingNotes);
-        
       })
       .catch((err) => console.error(err));
   }
@@ -149,17 +148,13 @@ export default function NotesPanel(props) {
     });
   }
 
-  function enableNoteRename(id){
-    console.log("loool" + id)
+  function enableNoteRename(id) {
+    console.log("loool" + id);
   }
 
-
   function renameNote(title) {
-
     // let formData = new URLSearchParams();
-
     // formData.append('title', title)
-
     // fetch("http://localhost:8080/notes/" + selectedNote, {
     //   method: "PATCH",
     //   body: formData,
@@ -170,15 +165,12 @@ export default function NotesPanel(props) {
     //   console.log(res);
     //   return true;
     // });
-
   }
-
 
   if (!loaded) {
     return <h1>Loading</h1>;
   } else {
     return (
-      
       <Grid container spacing={0}>
         <Grid item xs={4}>
           <Tooltip title="Add note" placement="right">
@@ -206,7 +198,7 @@ export default function NotesPanel(props) {
           />
         </Grid>
         <Grid item xs={1}>
-        <Divider orientation="vertical" flexItem />
+          <Divider orientation="vertical" flexItem />
         </Grid>
         <Grid item xs={6}>
           <NoteInput
@@ -221,7 +213,7 @@ export default function NotesPanel(props) {
           />
         </Grid>
         <Grid item xs={1}>
-        <Divider orientation="vertical" flexItem />
+          <Divider orientation="vertical" flexItem />
         </Grid>
         <NoteNameDialog
           open={open}
@@ -229,7 +221,6 @@ export default function NotesPanel(props) {
           handleNewNote={handleNewNote}
         />
       </Grid>
-      
     );
   }
 }
